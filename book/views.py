@@ -8,6 +8,7 @@ from book.seralizers import RecipeProductSerializer, RecipeSerializer, ProductSe
 
 
 class CreateRecipeAPIView(CreateAPIView):
+    """Добавляет к указанному рецепту указанный продукт с указанным весом"""
     queryset = RecipeProduct.objects.all()
     serializer_class = RecipeProductSerializer
 
@@ -28,6 +29,7 @@ class CreateRecipeAPIView(CreateAPIView):
 
 
 class RecipeRetrieveAPIView(RetrieveAPIView):
+    """Увеличивает на единицу количество приготовленных блюд для каждого продукта"""
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
 
@@ -39,6 +41,7 @@ class RecipeRetrieveAPIView(RetrieveAPIView):
 
 
 class GetMenuHTMLAPIView(RetrieveAPIView):
+    """Возвращает HTML страницу, на которой размещена таблица"""
     queryset = Product.objects.all()
     serializer_class = RecipeSerializer
 

@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Product(models.Model):
+    """Продукт"""
     name = models.CharField(max_length=256)
     count_uses = models.SmallIntegerField(default=0, null=True, blank=True)
 
@@ -10,6 +11,7 @@ class Product(models.Model):
 
 
 class Recipe(models.Model):
+    """Рецепт"""
     name = models.CharField(max_length=512)
     products = models.ManyToManyField(to=Product, through="RecipeProduct")
 
@@ -18,6 +20,7 @@ class Recipe(models.Model):
 
 
 class RecipeProduct(models.Model):
+    """Продукт в рецепте с весом"""
     product = models.ForeignKey(to=Product, on_delete=models.CASCADE)
     recipe = models.ForeignKey(to=Recipe, on_delete=models.CASCADE, null=True)
     weight = models.SmallIntegerField()
