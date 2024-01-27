@@ -1,9 +1,11 @@
+from django.db.models import Q
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, RetrieveAPIView
-from rest_framework.response import Response
+from rest_framework.response import Response, SimpleTemplateResponse
+from rest_framework.views import APIView
 
-from book.models import RecipeProduct, Recipe
-from book.seralizers import RecipeProductSerializer, RecipeSerializer
+from book.models import RecipeProduct, Recipe, Product
+from book.seralizers import RecipeProductSerializer, RecipeSerializer, ProductSerializer
 
 
 class CreateRecipeAPIView(CreateAPIView):
@@ -21,7 +23,7 @@ class CreateRecipeAPIView(CreateAPIView):
 
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response({'error': 'Product does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -35,3 +37,21 @@ class RecipeRetrieveAPIView(RetrieveAPIView):
             product.count_uses += 1
             product.save()
         return super().get(request, *args, **kwargs)
+
+
+class GetMenuHTMLAPIView(RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = RecipeSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        product = self.get_object()
+
+        recipe = Recipe.objects.filter(
+            (
+                    (Q(recipeproduct__product=product) & Q(recipeproduct__weight__lt=10))
+                    |
+                    ~Q(recipeproduct__product=product)
+            )
+        )
+
+        return SimpleTemplateResponse(template='menu/menu.html', context={'data': recipe, 'product': product})

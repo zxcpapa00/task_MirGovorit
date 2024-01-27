@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recipes without Product</title>
+</head>
+<body>
+
+<h2>Recipes without {{ product }}</h2>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+    </tr>
+    {% for recipe in data %}
+        <tr>
+            <td>{{ recipe.id }}</td>
+            <td>{{ recipe.name }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
