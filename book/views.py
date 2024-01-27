@@ -2,7 +2,6 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.response import Response, SimpleTemplateResponse
-from rest_framework.views import APIView
 
 from book.models import RecipeProduct, Recipe, Product
 from book.seralizers import RecipeProductSerializer, RecipeSerializer, ProductSerializer
@@ -24,8 +23,8 @@ class CreateRecipeAPIView(CreateAPIView):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid()
             return Response(serializer.data, status=status.HTTP_200_OK)
-
-        return Response({'error': 'Product does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(request.data, status=status.HTTP_201_CREATED)
 
 
 class RecipeRetrieveAPIView(RetrieveAPIView):
